@@ -89,6 +89,9 @@ task and request a decision instead of continuing busywork.
 | `notification-log` | notification skill | Delivery history |
 | `rollback-log` | rollback skill | Rollback history |
 | `approval-platform` | onboarding | Founder message channel |
+| `blueprint-run-[name]-[ts]` | automation-blueprint | Per-run step outputs and resume state |
+| `health-failure-log` | health-check | Per-layer failure history |
+| `ops-health-log` | health-check / Ops | 24-hour health window (read by cto-status-report) |
 
 New persistent keys must be documented here to avoid silent cross-agent
 collisions.

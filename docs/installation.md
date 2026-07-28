@@ -45,7 +45,7 @@ Expected output:
 ```
 [OK] Hermes found
 [OK] Skills directory: ~/.hermes/skills/
-[OK] 36 skills installed
+[OK] 37 skills installed
 [OK] Workflows directory: ~/.hermes/workflows/
 [OK] 6 workflows installed
 [OK] 7 agents installed

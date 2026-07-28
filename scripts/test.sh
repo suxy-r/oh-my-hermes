@@ -21,7 +21,7 @@ for skill in \
   security-review onboarding rollback computer-use product-marketing \
   creative-production observe-logs publish-with-buffer generate-with-seedance \
   project-switch project-status failure-recovery server-bootstrap \
-  ship-this-idea reset-runtime; do
+  ship-this-idea reset-runtime automation-blueprint; do
   if [ -f "$HERMES_DIR/skills/$skill.md" ]; then
     ok "  skill: $skill"
   else
@@ -63,7 +63,7 @@ done
 
 echo ""
 echo "CLI tools:"
-for cmd in curl git jq gh vercel node npm rg ffmpeg; do
+for cmd in curl git jq gh vercel node npm rg; do
   if command -v $cmd &>/dev/null; then
     ok "  $cmd"
   else

@@ -42,15 +42,16 @@ regression with the release. Alert only on actionable new High/Critical groups.
 
 ## Rollback
 
-If deployment is unhealthy after deploying:
+If the deployment is unhealthy after deploying, load the `rollback` skill:
 
-```bash
-# In Vercel dashboard: Deployments → select last known good → Promote to Production
-# Or via CLI:
-vercel rollback
+```
+tell hermes: run rollback
 ```
 
-Then run `post-deploy-followup` again on the rolled-back URL.
+The `rollback` skill health-checks the current deployment, confirms with the
+founder before acting, rolls back to the previous Vercel deployment, then
+re-runs `post-deploy-followup` to verify recovery. Rollback requires founder
+YES — it does not happen automatically.
 
 ## Setting up GitHub auto-deploy
 
