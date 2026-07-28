@@ -5,10 +5,10 @@
 [![Stars](https://img.shields.io/github/stars/salomondiei08/oh-my-hermes?style=flat-square)](https://github.com/salomondiei08/oh-my-hermes/stargazers)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
 [![Hermes](https://img.shields.io/badge/Hermes-v0.19%2B-orange?style=flat-square)](https://hermes-agent.nousresearch.com)
-[![Skills](https://img.shields.io/badge/skills-37-brightgreen?style=flat-square)](#skills)
+[![Skills](https://img.shields.io/badge/skills-39-brightgreen?style=flat-square)](#skills)
 [![Agents](https://img.shields.io/badge/agents-7-blue?style=flat-square)](#agents)
 
-**The production harness for Hermes Agent. 37 skills, 7 agents, 6 workflows — installed in one command.**
+**The production harness for Hermes Agent. 39 skills, 7 agents, 6 workflows — installed in one command.**
 
 Like Oh My Zsh is to Zsh. Hermes has the primitives: memory, kanban, cron, profiles, subagents. Oh My Hermes wires them into a real product-building loop — from idea through design, build, review, deploy, and monitoring — with you in control of the irreversible decisions.
 
@@ -77,7 +77,7 @@ Hermes runs on your VPS or laptop. You interact from your phone via Telegram, Sl
 | Step | What to do | What you get |
 |---|---|---|
 | 1 | Install Hermes + connect Telegram | A bot you can message |
-| 2 | Run `install.sh` | 37 skills and 6 workflows loaded |
+| 2 | Run `install.sh` | 39 skills and 6 workflows loaded |
 | 3 | Message: "set up the CTO loop" | Bot sets up profiles, kanban, and crons in chat |
 | 4 | Connect GitHub when useful | Issue triage and PR delivery enabled |
 | 5 | Add production URL after first deploy | Health checks and log observation enabled |
@@ -108,6 +108,7 @@ Hermes runs on your VPS or laptop. You interact from your phone via Telegram, Sl
 | `implement-with-claude-code` | Scaffolds Claude Code with full context + scope constraints |
 | `implement-with-codex` | Scaffolds Codex for targeted single-file fixes |
 | `create-skill` | Creates a new skill in the correct format (meta-skill) |
+| `learn-skill` | Distills a session, URL, or directory into a reusable slash command (v0.18+) |
 
 ### Deliver
 
@@ -132,6 +133,7 @@ Hermes runs on your VPS or laptop. You interact from your phone via Telegram, Sl
 | `reset-runtime` | Backs up and clears stale Hermes state without deleting credentials |
 | `server-bootstrap` | Sets up a fresh VPS with Hermes, Telegram, and the CTO loop |
 | `automation-blueprint` | Saves multi-step recurring tasks as named, parameterized blueprints |
+| `gateway-routing` | Routes Telegram chats, Discord channels, or Slack workspaces to specific profiles (v0.19+) |
 
 ### GitHub
 
@@ -288,7 +290,7 @@ If you use Bitwarden or 1Password, run `hermes secrets` to plug your vault in di
 
 ```
 oh-my-hermes/
-├── skills/          ← 37 skill files → ~/.hermes/skills/
+├── skills/          ← 39 skill files → ~/.hermes/skills/
 ├── workflows/       ← 6 workflow files → ~/.hermes/workflows/
 ├── agents/          ← 7 agent role definitions → ~/.hermes/agents/
 ├── templates/       ← AGENTS.md template, .env example, health endpoint
@@ -316,7 +318,7 @@ Do not use `npm install -g gbrain` — a squatter package exists on npm under th
 
 ## Roadmap
 
-**V1 — current:** 37 skills, 7 agents, 6 workflows. Optional-question onboarding, project switching, status, dead-letter recovery, product design, computer use policy, recurring security and log observation, creative launch production, fresh-server setup, Vercel + Supabase + GitHub delivery, automation blueprints.
+**V1 — current:** 39 skills, 7 agents, 6 workflows. Optional-question onboarding, project switching, status, dead-letter recovery, product design, computer use policy, recurring security and log observation, creative launch production, fresh-server setup, Vercel + Supabase + GitHub delivery, automation blueprints, `/learn` skill distillation, multi-profile gateway routing.
 
 **V2 — planned:** Staging-to-production promotion, broader provider adapters, post-deploy journey tests.
 

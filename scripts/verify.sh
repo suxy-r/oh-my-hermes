@@ -75,6 +75,8 @@ check "server-bootstrap"           "$SKILLS_DIR/server-bootstrap.md"
 check "ship-this-idea"             "$SKILLS_DIR/ship-this-idea.md"
 check "reset-runtime"              "$SKILLS_DIR/reset-runtime.md"
 check "automation-blueprint"       "$SKILLS_DIR/automation-blueprint.md"
+check "learn-skill"                "$SKILLS_DIR/learn-skill.md"
+check "gateway-routing"            "$SKILLS_DIR/gateway-routing.md"
 
 echo ""
 echo "Agents:"
