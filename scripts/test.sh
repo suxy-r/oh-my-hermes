@@ -63,13 +63,17 @@ done
 
 echo ""
 echo "CLI tools:"
-for cmd in curl git jq gh vercel node npm rg; do
-  if command -v $cmd &>/dev/null; then
-    ok "  $cmd"
-  else
-    fail "  $cmd not found"
-  fi
-done
+if [ "${TEST_MODE:-}" = "1" ]; then
+  echo "  [SKIP] TEST_MODE=1 — host tool availability not checked in CI"
+else
+  for cmd in curl git jq gh vercel node npm rg; do
+    if command -v $cmd &>/dev/null; then
+      ok "  $cmd"
+    else
+      fail "  $cmd not found"
+    fi
+  done
+fi
 
 for script in setup-integrations.sh project.sh status.sh run-cron-safe.sh reset-runtime.sh server-bootstrap.sh ship-this-idea.sh; do
   if [ -x "$HERMES_DIR/scripts/$script" ]; then
