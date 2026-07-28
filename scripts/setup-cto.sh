@@ -3,7 +3,7 @@
 # initializes the kanban board, authenticates GitHub CLI, and sets up crons.
 # Run once after install.sh. Safe to re-run (idempotent).
 
-set -e
+set -euo pipefail
 
 export PATH="$HOME/.local/bin:$HOME/.hermes/hermes-agent/venv/bin:$PATH"
 
@@ -18,6 +18,11 @@ ok()   { echo "  [OK]   $1"; PASS=$((PASS+1)); }
 fail() { echo "  [FAIL] $1"; FAIL=$((FAIL+1)); }
 warn() { echo "  [WARN] $1"; WARN=$((WARN+1)); }
 step() { echo ""; echo "── $1"; }
+
+# Robustly check profile existence — handles decorators (◆) in hermes output
+profile_exists() {
+  hermes profile list 2>/dev/null | awk 'NR>2 {print $1}' | sed 's/^◆//' | grep -Fxq "$1"
+}
 
 hermes_has_subcommand() {
   local group="$1"
@@ -117,7 +122,7 @@ fi
 step "2. Creating Hermes profiles (cto, pm, designer, dev, qa, security, ops)"
 
 for profile in cto pm designer dev qa ops security; do
-  if hermes profile list 2>/dev/null | grep -qw "$profile"; then
+  if profile_exists "$profile"; then
     ok "profile '$profile' already exists"
   else
     case "$PROFILE_CREATE_SUBCOMMAND" in
@@ -278,23 +283,24 @@ ensure_cron() {
   local name="$1"
   local schedule="$2"
   local prompt="$3"
+  local deliver="${4:-local}"
   local cron_list
 
   cron_list=$(hermes cron list --all 2>/dev/null || hermes cron list 2>/dev/null || true)
 
-  if echo "$cron_list" | grep -Fq "$name" || echo "$cron_list" | grep -Fq "$prompt"; then
+  if echo "$cron_list" | grep -Fq "$name" || echo "$cron_list" | grep -Fq "Name:      $name"; then
     ok "cron already exists: $name"
     return 0
   fi
 
-  if hermes cron add --help 2>/dev/null | grep -q -- "--name"; then
-    CRON_ARGS=(--name "$name")
-  else
-    CRON_ARGS=()
+  # Try v0.19+ syntax first (hermes cron create), fall back to legacy (hermes cron add)
+  if hermes cron create --name "$name" --deliver "$deliver" "$schedule" "$prompt" >/dev/null 2>&1; then
+    ok "cron created: $name"
+    return 0
   fi
 
-  if hermes cron add "${CRON_ARGS[@]}" "$schedule" "$prompt" 2>/dev/null; then
-    ok "cron created: $name"
+  if hermes cron add --name "$name" "$schedule" "$prompt" >/dev/null 2>&1; then
+    ok "cron created (legacy): $name"
     return 0
   fi
 
@@ -322,7 +328,8 @@ else
 fi
 
 ensure_cron "oh-my-hermes-daily-report" "0 9 * * *" \
-  "Use failure-recovery for project ${PROJECT_SLUG:-default}: send cto-status-report to founder."
+  "Use failure-recovery for project ${PROJECT_SLUG:-default}: send cto-status-report to founder." \
+  "origin"
 
 if [ -n "$GITHUB_REPO" ]; then
   ensure_cron "oh-my-hermes-security-daily" "30 8 * * *" \
