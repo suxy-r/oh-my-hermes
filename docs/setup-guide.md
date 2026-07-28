@@ -9,7 +9,7 @@ Everything you need before the CTO loop runs autonomously.
 | Requirement | Why |
 |---|---|
 | A VPS or always-on machine | Hermes must run 24/7 for cron and monitoring |
-| Hermes Agent v0.16+ | Profiles, Kanban, skill search, cron, and Computer Use |
+| Hermes Agent v0.19+ | Profiles, Kanban, Smart Approvals, stacked skills, cron, and Computer Use |
 | A model provider (Anthropic, OpenAI, OpenRouter…) | Hermes needs an LLM |
 | A messaging platform (Telegram recommended) | How you receive approval requests |
 | GitHub account + repo | Optional delivery surface for issues and PRs |
@@ -36,7 +36,7 @@ sudo apt install -y git curl unzip
 ```bash
 curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash
 source ~/.bashrc
-hermes --version   # should print v0.16+
+hermes --version   # should print v0.19+
 ```
 
 Configure a model provider:

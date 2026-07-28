@@ -1,13 +1,16 @@
 ---
 name: send-notification
 description: Use when a deployment completes, a health check fails, or an important status event needs to be reported to the founder
-version: 1.1.0
-tags: [notification, slack, telegram, ops, webhook]
+version: 1.2.0
+tags: [notification, slack, telegram, ops, webhook, gateway]
 ---
 
 ## Overview
 
-Sends a structured notification to the founder. Supports Slack webhook and Telegram bot. Uses whichever backend is configured — both can be active simultaneously. Logs delivery to Hermes memory. Degrades gracefully if no backend is configured.
+Sends a structured notification to the founder. The Hermes Gateway (v0.19+) is
+the primary delivery path with durable ledger-based recovery. Slack webhook and
+Telegram direct API are fallbacks for environments where the Gateway is not
+running. Logs delivery to Hermes memory.
 
 ## When to Use
 
@@ -18,9 +21,10 @@ Sends a structured notification to the founder. Supports Slack webhook and Teleg
 
 ## Prerequisites
 
-At least one of:
-- `SLACK_WEBHOOK_URL` in environment
-- `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID` in environment
+One of:
+- Hermes Gateway configured and running (primary — durable delivery in v0.19+)
+- `SLACK_WEBHOOK_URL` in environment (fallback)
+- `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID` in environment (fallback)
 
 ## Procedure
 
@@ -32,7 +36,20 @@ At least one of:
 - Timestamp
 - Brief status note (plain English, no raw logs)
 
-**2. Send to Slack** (if `SLACK_WEBHOOK_URL` is set):
+**2. Send via Hermes Gateway** (primary — if Gateway is running):
+
+Use the Hermes messaging toolset to send directly to the founder's configured
+platform. The Gateway's durable delivery ledger (v0.19+) ensures messages
+survive a gateway crash and are re-delivered on restart.
+
+```
+send_message("founder", "[event] [project] → [environment]\n[url]\n[status]\n[timestamp]")
+```
+
+If the messaging toolset is unavailable or the Gateway is not running, continue
+to the fallback backends.
+
+**3. Send to Slack** (fallback if `SLACK_WEBHOOK_URL` is set):
 ```bash
 HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$SLACK_WEBHOOK_URL" \
   -H 'Content-Type: application/json' \
@@ -40,7 +57,7 @@ HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$SLACK_WEBHOOK_URL
 ```
 HTTP 200 = delivered. Anything else = log failure, continue to next backend.
 
-**3. Send to Telegram** (if `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` are set):
+**4. Send to Telegram** (fallback if `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` are set):
 ```bash
 HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
   "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
@@ -50,11 +67,11 @@ HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
 ```
 HTTP 200 = delivered.
 
-**4. If no backend configured:**
+**5. If no backend available:**
 - Print notification content to console (do not fail silently)
-- Print: "No notification backend configured. Set SLACK_WEBHOOK_URL or TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID."
+- Print: "No notification backend configured. Run: hermes gateway setup"
 
-**5. Save to Hermes memory:** key `notification-log`, append `{ event, timestamp, backend, delivered: true/false }`.
+**6. Save to Hermes memory:** key `notification-log`, append `{ event, timestamp, backend, delivered: true/false }`.
 
 ## Pitfalls
 
@@ -62,10 +79,10 @@ HTTP 200 = delivered.
 - Keep messages under 4000 characters — Slack truncates, Telegram rejects above 4096.
 - Never include env var values or credentials in notification content.
 - Telegram `TELEGRAM_CHAT_ID` for a personal chat is your numeric user ID — get it by messaging `@userinfobot`.
-- If both backends are configured, a failure on one does not block the other.
+- If both fallback backends are configured, a failure on one does not block the other.
+- Gateway durable delivery retries on crash. Do not send via fallback AND Gateway at the same time.
 
 ## Verification
 
-- HTTP 200 from at least one backend
-- Message appears in Slack channel or Telegram chat
+- Message received in founder's configured platform
 - Entry appended to `notification-log` in Hermes memory

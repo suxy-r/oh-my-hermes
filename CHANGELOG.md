@@ -1,5 +1,38 @@
 # Changelog
 
+## 2.1.0 - 2026-07-28
+
+### Hermes v0.19 compatibility + new automation-blueprint skill
+
+- Updated `onboarding` to v2.1.0: `hermes setup` wizard for first-time installs,
+  Smart Approvals confirmation step (`approvals.mode smart`), stacked skills
+  documentation (`/skill-a /skill-b`), Bitwarden/1Password vault support, and
+  Checkpoints v2 `/goal` setup.
+- Updated `send-notification` to v1.2.0: Hermes Gateway is now the primary
+  delivery path with durable ledger-based recovery; Slack and Telegram direct
+  API are fallbacks.
+- Updated `await-merge-approval` to v2.1.0: documented durable delivery and
+  Smart Approvals context (routine commands are auto-reviewed; only the
+  production ship decision is a founder gate).
+- Updated `kanban-task` to v1.2.0: documented durable multi-agent Kanban with
+  automatic retries and per-task recovery context (Hermes v2026.5.7+).
+- Updated `failure-recovery` to v1.1.0: added `hermes cron history` for the
+  cron durable audit trail (v0.19+); added gateway auto-resume note.
+- Added `automation-blueprint` skill: defines named, parameterized multi-step
+  recurring tasks as Hermes Blueprints (v0.17+) with YAML step definitions,
+  approval gates, cron scheduling, and resume-from-step recovery.
+- Removed `docs/improvements-to-hermes.md`: stale internal notes, most proposals
+  addressed in Hermes v0.17–0.19.
+- Moved `docs/x-article.md` to `content/x-article.md`: draft article belongs in
+  content/, not technical docs.
+- Updated `docs/setup-guide.md`: minimum Hermes version raised to v0.19+.
+- README: regrouped 37 skills by category (Product, Build, Deliver, Operate,
+  GitHub, Creative, Project) instead of a single 36-row flat table. Added
+  stacked skills example. Added `automation-blueprint` and updated counts.
+- New banner generated via Python/Pillow.
+
+---
+
 ## 2.0.0 - 2026-06-19
 
 ### Product-building lifecycle

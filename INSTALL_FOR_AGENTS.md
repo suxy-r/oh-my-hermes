@@ -23,7 +23,7 @@ git clone https://github.com/salomondiei08/oh-my-hermes /tmp/oh-my-hermes
 bash /tmp/oh-my-hermes/install.sh
 ```
 
-Installs 36 skills, 6 workflows, 7 agent role definitions, and helper scripts
+Installs 37 skills, 6 workflows, 7 agent role definitions, and helper scripts
 into `~/.hermes/`.
 
 ---
@@ -89,7 +89,7 @@ verify it before shipping, and ask only at irreversible boundaries.
 
 | Path | Contents |
 |---|---|
-| `~/.hermes/skills/` | 36 skills — complete product lifecycle + CTO loop |
+| `~/.hermes/skills/` | 37 skills — complete product lifecycle + CTO loop |
 | `~/.hermes/workflows/` | 6 workflows |
 | `~/.hermes/agents/` | 7 agent role definitions |
 | `~/.hermes/scripts/` | setup, status, project switch, reset, dead-letter helpers |

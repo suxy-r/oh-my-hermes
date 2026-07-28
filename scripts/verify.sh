@@ -74,6 +74,7 @@ check "failure-recovery"           "$SKILLS_DIR/failure-recovery.md"
 check "server-bootstrap"           "$SKILLS_DIR/server-bootstrap.md"
 check "ship-this-idea"             "$SKILLS_DIR/ship-this-idea.md"
 check "reset-runtime"              "$SKILLS_DIR/reset-runtime.md"
+check "automation-blueprint"       "$SKILLS_DIR/automation-blueprint.md"
 
 echo ""
 echo "Agents:"

@@ -1,7 +1,7 @@
 ---
 name: onboarding
 description: Use when a user first installs Oh My Hermes or asks to set up the product-building loop for a project
-version: 2.0.0
+version: 2.1.0
 tags: [setup, onboarding, product-loop, guided]
 ---
 
@@ -19,37 +19,62 @@ work.
 
 ## Prerequisites
 
-- Hermes Agent with profiles, Kanban, cron, and memory support.
+- Hermes Agent v0.19+ with profiles, Kanban, cron, memory, and Smart Approvals.
 - Oh My Hermes files installed.
 - Optional: authenticated `gh` and a production URL.
+- Optional: Bitwarden or 1Password configured (`hermes secrets`) — credentials
+  can be sourced from vault without pasting tokens in chat.
 
 ## Procedure
 
-1. Inspect the current git remote, package files, deployment config, existing
+1. If this is a first-time Hermes install, suggest running `hermes setup` to
+   complete the configuration wizard before continuing.
+2. Inspect the current git remote, package files, deployment config, existing
    Hermes memory, and authenticated CLI state.
-2. Infer repository, production URL, and preferred report time where possible.
-3. Ask at most one message with up to three unresolved settings. Include
+3. Infer repository, production URL, and preferred report time where possible.
+4. Ask at most one message with up to three unresolved settings. Include
    recommended defaults and: "Skip any question and I will continue with the
    defaults."
-4. Never ask the user to paste a token into chat. If GitHub is not authenticated,
+5. Never ask the user to paste a token into chat. If GitHub is not authenticated,
    provide `gh auth login` as a follow-up; continue configuring local profiles.
-5. Create or verify profiles: `cto`, `pm` (Product), `designer`, `dev`, `qa`,
+   If a vault is configured, source credentials from `hermes secrets get`.
+6. Create or verify profiles: `cto`, `pm` (Product), `designer`, `dev`, `qa`,
    `security`, and `ops`.
-6. Initialize Kanban and save available project context to memory.
-7. Create missing cron jobs only:
+7. Initialize Kanban and save available project context to memory.
+8. Confirm Smart Approvals is active for routine commands:
+   ```bash
+   hermes config set approvals.mode smart
+   ```
+   This is the v0.19 default. Smart Approvals handles routine command review
+   autonomously. Founder approval remains required for production release,
+   rollback, and public content.
+9. Create missing cron jobs only (use named jobs to avoid duplicates):
    - hourly product/backlog review when a repository exists
    - 15-minute health check when a production URL exists
    - hourly log observation when a production URL exists
    - daily status report
    - daily lightweight security check when a repository exists
    - weekly full security assessment when a repository exists
-8. Confirm what works now and list missing credentials or URLs as optional next
-   steps. Start from the user's product idea or current highest-priority outcome,
-   not automatically from GitHub issues.
-9. Run `bash ~/.hermes/scripts/setup-integrations.sh --check`. Request OpenAI only when it
-   is the selected model or creative provider, Buffer at the first approved
-   scheduling action, and Ark/Seedance at the first approved generated-video
-   action. Never require all three during initial onboarding.
+10. Confirm what works now and list missing credentials or URLs as optional next
+    steps. Start from the user's product idea or current highest-priority outcome,
+    not automatically from GitHub issues.
+11. Run `bash ~/.hermes/scripts/setup-integrations.sh --check`. Request OpenAI
+    only when it is the selected model or creative provider, Buffer at the first
+    approved scheduling action, and Ark/Seedance at the first approved
+    generated-video action. Never require all three during initial onboarding.
+12. Set a persistent product focus (v0.19+ Checkpoints):
+    ```
+    /goal Build, launch, operate, and improve [product]. Keep one outcome active,
+    verify before shipping, and ask only at irreversible boundaries.
+    ```
+
+## Stacked Skills (v0.19+)
+
+Multiple skills can be chained in one invocation:
+```
+/clarify-requirements /product-brief start a new checkout feature
+```
+Use this to run intake and brief creation without a round-trip.
 
 ## Question Policy
 
@@ -72,6 +97,7 @@ work.
 
 - Seven profiles and their role files exist.
 - Kanban is accessible.
+- Smart Approvals is set to `smart` mode.
 - Existing cron jobs were reused rather than duplicated.
 - Available project context is saved and missing integrations are explicit.
 - The user can begin with a product outcome even without GitHub or deployment.

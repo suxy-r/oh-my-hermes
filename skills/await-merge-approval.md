@@ -1,7 +1,7 @@
 ---
 name: await-merge-approval
 description: Use when a reviewed product increment is ready and the founder must choose whether to ship, revise, close, or defer it
-version: 2.0.0
+version: 2.1.0
 tags: [release, github, approval, human-in-loop]
 metadata:
   hermes:
@@ -12,7 +12,14 @@ metadata:
 ## Overview
 
 Keeps the irreversible release decision with the founder while making the
-response small and actionable.
+response small and actionable. Smart Approvals (v0.19+ default) handles routine
+command review autonomously — only the production ship/rollback/close decision
+is a founder gate.
+
+The approval message is delivered through the Hermes Gateway with durable
+ledger-based recovery: the message survives a gateway crash and is re-delivered
+on restart. If the founder's response arrives while the Gateway was down, it is
+processed when the Gateway comes back.
 
 ## When to Use
 
@@ -23,7 +30,7 @@ response small and actionable.
 
 - PR number, preview URL, and founder summary.
 - Passing required checks and current reviews.
-- A configured Hermes messaging platform.
+- A configured Hermes messaging platform (Gateway recommended for durable delivery).
 
 ## Procedure
 
