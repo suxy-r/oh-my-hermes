@@ -58,6 +58,8 @@ Agents must follow these requirements for all changes:
 - Deploy, monitor, notify, schedule, remember context → Hermes
 - Product UI/UX and visual verification → Hermes Designer Agent
 - Native/authenticated GUI work → computer-use only after API/browser paths
+- Recurring multi-step sequences → automation-blueprint skill (Hermes v0.17+)
+- Chain skills without a round-trip: /skill-a /skill-b prompt (Hermes v0.19+)
 - Not sure? Tell Hermes: "run choose-engine"
 
 ## Monitoring

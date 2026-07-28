@@ -1,5 +1,17 @@
 # Version
 
+## 2.1.0 - 2026-07-28
+
+- Updated five skills for Hermes v0.19 compatibility: Smart Approvals,
+  Gateway-first durable delivery, durable multi-agent kanban, cron audit
+  history, and stacked skills support.
+- Added `automation-blueprint` skill for Hermes v0.17+ Blueprint API.
+- README regrouped into seven skill categories. Install command updated.
+- Banner regenerated.
+- Removed stale internal docs (improvements-to-hermes, x-article moved to
+  content/).
+- Minimum Hermes version raised to v0.19+.
+
 ## 2.0.0 - 2026-06-19
 
 - Reframed the CTO loop around the complete product lifecycle: Understand,
