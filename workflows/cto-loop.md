@@ -1,13 +1,14 @@
 ---
 name: cto-loop
-description: Build, launch, operate, and improve a product through a minimal seven-agent lifecycle with founder approval at irreversible boundaries
-version: 3.0.0
+description: Build, launch, operate, and improve a product through an adaptive specialist lifecycle with founder approval at irreversible boundaries
+version: 4.0.0
 tags: [product, build, design, launch, operations, growth, agents]
 ---
 
 ## Overview
 
-The CTO coordinates one product loop:
+The CTO coordinates one product loop. Seven role definitions provide ownership;
+they are not seven mandatory model calls:
 
 ```text
 Understand -> Design -> Build -> Check -> Ship -> Learn
@@ -31,6 +32,25 @@ or an issue.
 
 Computer use is a guarded shared skill, not an agent.
 
+## Adaptive Topology
+
+Start with one end-to-end owner and deterministic verification. Activate a
+specialist only when it contributes independent information or owns a relevant
+risk boundary.
+
+| Task shape | Active topology |
+|---|---|
+| Small, reversible, fully specified | One owner + tests |
+| Moderate ambiguity or user impact | One owner + the one relevant critic |
+| High-risk or cross-system | One owner + independent QA/Security critics |
+| Irreversible decision or conflicting evidence | CTO evidence judge |
+
+Do not run an all-to-all discussion. For deliberation, collect the first round
+independently and in parallel without memory or tools. Participants return a
+typed record with `position`, `evidence_ids`, `risks`, `confidence`, and
+`dissent`. A second round receives only a bounded summary. The CTO may dereference
+critical evidence before deciding.
+
 ## Loop
 
 ### 1. Understand
@@ -51,7 +71,8 @@ Computer use is a guarded shared skill, not an agent.
 
 - CTO decomposes the approved outcome into dependent kanban tasks.
 - Builder claims one ready task and implements the smallest complete increment.
-- Parallel work is used only for independent tasks and isolated with worktrees.
+- Parallel work is used only for independent tasks. Isolation is required only
+  when concurrent writers would otherwise share mutable state.
 - Completion includes acceptance-criteria, test, runtime, and change evidence.
 
 ### 4. Check
@@ -89,6 +110,33 @@ Each task includes:
 - 2-5 acceptance criteria
 - Assumptions and dependencies
 - Required completion evidence
+
+The task card is the single source of truth for current state. Product briefs,
+design files, pull requests, memories, and sessions are evidence referenced by
+the task; they do not maintain competing lifecycle state.
+
+Each delegation packet includes:
+
+- Role authority and non-goals
+- Objective, scope, constraints, and acceptance criteria
+- Evidence manifest with path/URI, revision/hash, time, provenance, confidence
+- Confirmed decisions, unresolved conflicts, and dependencies
+- Minimum toolset
+- Typed output schema
+
+Deterministic validation belongs in scripts and CI. Do not spend an additional
+agent call rephrasing a test, typecheck, schema check, secret scan, or health
+probe that the system can execute directly.
+
+## Memory Policy
+
+- Personal profile and stable preferences may use long-term memory.
+- Project rules belong in `AGENTS.md`; agent authority belongs in profile
+  `SOUL.md`; current task state belongs in the task card.
+- Stateless deliberation participants do not recall or commit long-term memory.
+- Persist verified decisions, outcomes, cases, and reusable execution insights
+  with provenance. Never persist raw debate, temporary guesses, secrets, or
+  unverified claims.
 
 ## Question Policy
 

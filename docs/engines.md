@@ -1,6 +1,8 @@
 # Engine Routing
 
-Choose the smallest capable execution surface.
+Choose the smallest capable execution surface by ambiguity, risk, verification
+cost, and tool horizon. File count and role name are not routing signals by
+themselves.
 
 ```text
 Product strategy, design direction, orchestration, ops, memory, scheduling
@@ -9,11 +11,11 @@ Product strategy, design direction, orchestration, ops, memory, scheduling
 Native macOS or authenticated GUI with no better interface
   -> Hermes computer-use skill
 
-Targeted, well-defined code change
-  -> Codex
+Bounded implementation with explicit acceptance criteria
+  -> the available coding agent with the smallest sufficient model
 
-Cross-module feature, architecture, or broad refactor
-  -> Claude Code
+Ambiguous architecture, long tool horizon, or cross-system migration
+  -> a strong reasoning coding agent with independent verification
 
 Launch motion graphics from product evidence
   -> Designer + HyperFrames through creative-production
@@ -28,16 +30,41 @@ delegate specialized coding when that improves reliability.
 Use Hermes directly for product briefs, design contracts, routine project edits,
 deployments, monitoring, notifications, research, and orchestration.
 
-## Codex
+## Coding Agents
 
-Use for bounded code changes with clear outcomes, fast exploration, and focused
-fixes. Pass the product/design acceptance criteria and required evidence.
+Use a coding agent for bounded changes with clear outcomes, fast exploration,
+and focused fixes. Pass product/design acceptance criteria, exact allowed paths,
+required evidence, and verification commands.
 
-## Claude Code
+For cross-module work, prefer one end-to-end executor that retains ownership
+through implementation and verification. Do not split a coherent change merely
+because it spans several files. Add a separate reviewer only when independent
+inspection improves confidence.
 
-Use for new features, architectural changes, test suites, and changes requiring
-judgment across many files. Pass the brief, design contract, constraints, and
-verification commands.
+## DeepSeek V4
+
+When Hermes uses DeepSeek V4, route by task shape:
+
+| Work | Model and effort |
+|---|---|
+| Classification, routing, formatting, deterministic status | V4 Flash `low` |
+| Bounded daily agent work and independent review | V4 Flash `high` |
+| Ambiguous implementation, architecture, long tool loop | V4 Pro `high` |
+| Rare high-risk conflict or irreversible synthesis | V4 Pro `max` |
+
+Use explicit `low`, `high`, or `max`. DeepSeek maps `medium` and `xhigh` to
+`high`, so they do not create useful intermediate levels. Pin dated provider
+model IDs after an A/B test instead of assuming an aggregator's generic alias
+has moved to the latest release.
+
+Thinking tool loops must preserve the assistant's `reasoning_content` on every
+subsequent request. Streaming clients must tolerate empty chunks and aggregate
+parallel tool-call deltas by tool-call index. Maintain a small protocol
+conformance suite for every provider/model pair.
+
+Give each invocation the minimum relevant tool schema. A one-iteration call
+must have no tools; otherwise a tool call can consume the only iteration before
+the model produces a final answer.
 
 ## Computer Use
 

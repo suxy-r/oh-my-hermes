@@ -53,12 +53,19 @@ Agents must follow these requirements for all changes:
 
 ## Engine Guidance
 
-- Complex multi-file changes, new features, architecture → Claude Code
-- Quick targeted fixes, single-file changes → Codex
+- Route by ambiguity, risk, verification cost, and tool horizon — not file count
+- Bounded changes with explicit acceptance criteria → smallest capable coding model
+- Ambiguous architecture or long tool loops → strong reasoning model, one end-to-end owner
+- Independent reviewers inspect separate evidence; repeated personas are not independent evidence
 - Deploy, monitor, notify, schedule, remember context → Hermes
 - Product UI/UX and visual verification → Hermes Designer Agent
 - Native/authenticated GUI work → computer-use only after API/browser paths
 - Not sure? Tell Hermes: "run choose-engine"
+
+For DeepSeek V4: use Flash low for routing/status, Flash high for bounded daily
+agent work, Pro high for ambiguous implementation, and Pro max only for rare
+high-risk conflict resolution. Use the minimum relevant toolset and preserve
+`reasoning_content` throughout thinking-mode tool loops.
 
 ## Monitoring
 

@@ -46,6 +46,23 @@ Delegate a bounded outcome with context, constraints, acceptance criteria, and
 required evidence. Use parallel subagents only for independent work. Do not
 parallelize dependent design, implementation, and review stages.
 
+Activate specialists by risk instead of sending every task through all seven
+profiles:
+
+- Low-risk, well-specified work: one owner plus deterministic checks.
+- User-facing behavior: add Designer or Product only when their judgment changes
+  the outcome.
+- Auth, payments, personal data, dependencies, or deployment boundaries: add
+  Security.
+- Complex or ambiguous implementation: use one end-to-end Builder, then an
+  independent Reviewer.
+- Conflicting high-risk evidence: CTO judges the evidence; do not resolve it by
+  majority vote or an all-to-all debate.
+
+The same model in several profiles is not independent evidence. Independence
+comes from separate source inspection, blind first-round review, tests, runtime
+probes, or a genuinely different model when the risk justifies it.
+
 Examples:
 
 ```text
@@ -56,6 +73,28 @@ Spawn Security Agent to review the payment and authorization changes.
 Spawn QA Agent to test the complete checkout journey on preview.
 Spawn Ops Agent to deploy and observe the release.
 ```
+
+## Delegation Contract
+
+Every delegated task receives only the smallest sufficient context envelope:
+
+1. Role authority and explicit non-goals.
+2. Objective, scope, constraints, and acceptance criteria.
+3. Evidence manifest with URI/path, revision or hash, timestamp, provenance,
+   and confidence.
+4. Confirmed decisions, unresolved conflicts, and dependencies.
+5. The minimum toolset required for this task.
+6. A typed output schema including findings, evidence IDs, confidence, and
+   dissent.
+
+Keep stable rules before volatile task or memory content so provider prefix
+caching remains useful. Prefer exact evidence references over copying long
+documents. Treat one million tokens as a ceiling, not a target; normal work
+should remain compact enough that critical evidence is not buried.
+
+Raw debate, transient guesses, and tool logs are not durable memory. Persist
+only verified decisions, outcomes, reusable cases, and stable preferences with
+provenance.
 
 ## Question Policy
 
