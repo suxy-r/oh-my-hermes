@@ -27,20 +27,28 @@ if [ ! -d "$SKILLS_DIR" ]; then
   exit 1
 fi
 
-# Collect all skill names for cross-reference checking
-declare -A SKILL_EXISTS
+# Collect all skill names in a portable newline-delimited index. macOS ships
+# Bash 3.2, which does not support associative arrays.
+SKILL_INDEX="$(mktemp)"
+trap 'rm -f "$SKILL_INDEX"' EXIT
+
+skill_exists() {
+  grep -Fxq "$1" "$SKILL_INDEX"
+}
+
 for skill_file in "$SKILLS_DIR"/*.md; do
   [ -f "$skill_file" ] || continue
   skill_name=$(grep -m1 '^name:' "$skill_file" 2>/dev/null | sed 's/^name:[[:space:]]*//' | tr -d '"')
   if [ -n "$skill_name" ]; then
-    SKILL_EXISTS["$skill_name"]=1
+    printf '%s\n' "$skill_name" >> "$SKILL_INDEX"
   fi
   # Also index by filename stem
   stem=$(basename "$skill_file" .md)
-  SKILL_EXISTS["$stem"]=1
+  printf '%s\n' "$stem" >> "$SKILL_INDEX"
 done
+sort -u "$SKILL_INDEX" -o "$SKILL_INDEX"
 
-echo "Skills found: ${#SKILL_EXISTS[@]}"
+echo "Skills found: $(wc -l < "$SKILL_INDEX" | tr -d ' ')"
 echo ""
 
 for skill_file in "$SKILLS_DIR"/*.md; do
@@ -77,7 +85,7 @@ for skill_file in "$SKILLS_DIR"/*.md; do
   # Matches patterns like: `skill-name` inside a skill reference context
   while IFS= read -r ref; do
     ref_clean=$(echo "$ref" | tr -d '`')
-    if [ -n "${SKILL_EXISTS[$ref_clean]}" ]; then
+    if skill_exists "$ref_clean"; then
       ok "$stem: reference '$ref_clean' resolves"
     else
       warn "$stem: reference '$ref_clean' not found in skills/ — may be a workflow or external command"

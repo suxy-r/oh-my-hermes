@@ -9,6 +9,8 @@ export PATH="$HOME/.local/bin:$HOME/.hermes/hermes-agent/venv/bin:$PATH"
 
 HERMES_DIR="${HERMES_HOME:-$HOME/.hermes}"
 AGENTS_DIR="$HERMES_DIR/agents"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SOUL_UPDATER="$SCRIPT_DIR/update-profile-soul.sh"
 
 PASS=0
 FAIL=0
@@ -191,21 +193,22 @@ for profile in cto pm designer dev qa ops security; do
   fi
 done
 
-# ── 3. Inject agent roles into profiles ───────────
-step "3. Injecting agent role definitions into profiles"
+# ── 3. Inject agent roles into effective profile SOULs ─────
+step "3. Installing role definitions into profile SOUL.md files"
+
+if [ ! -x "$SOUL_UPDATER" ]; then
+  fail "missing executable helper: $SOUL_UPDATER — run install.sh again"
+  exit 1
+fi
 
 for agent in cto pm designer dev qa ops security; do
   PROFILE_DIR="$HERMES_DIR/profiles/$agent"
   AGENT_FILE="$AGENTS_DIR/$agent.md"
 
-  if [ -d "$PROFILE_DIR" ]; then
-    cp "$AGENT_FILE" "$PROFILE_DIR/agent-role.md"
-    ok "role injected: $agent"
+  if bash "$SOUL_UPDATER" "$PROFILE_DIR" "$AGENT_FILE" "$agent"; then
+    ok "effective SOUL role installed: $agent"
   else
-    # Profiles may be created lazily — copy will happen on first use
-    warn "Profile dir ~/.hermes/profiles/$agent/ not created yet"
-    echo "         This is normal — it will be created when you first run:"
-    echo "         hermes profile use $agent"
+    fail "could not update profile SOUL: $agent"
   fi
 done
 
@@ -355,7 +358,7 @@ ensure_cron() {
   return 0
 }
 
-if [ -n "$PRODUCTION_URL" ]; then
+if [ -n "${PRODUCTION_URL:-}" ]; then
   ensure_cron "oh-my-hermes-health" "*/15 * * * *" \
     "Use failure-recovery for project ${PROJECT_SLUG:-default}: run health-check on $PRODUCTION_URL and save a dead letter if the check fails."
   ensure_cron "oh-my-hermes-log-observer" "15 * * * *" \
@@ -366,20 +369,14 @@ else
   echo "         hermes cron create --name 'oh-my-hermes health-check' --deliver local '*/15 * * * *' 'Run health-check on https://yourapp.vercel.app'"
 fi
 
-if [ -n "$GITHUB_REPO" ]; then
-  ensure_cron "oh-my-hermes-product-review" "0 * * * *"     "Use failure-recovery for project ${PROJECT_SLUG:-default}: review active product work and actionable GitHub issues for $GITHUB_REPO. Keep one product outcome active and do not treat issue volume as the roadmap."
-else
-  warn "GITHUB_REPO not set — skipping product and issue review cron"
-fi
-
+if [ -n "${GITHUB_REPO:-}" ]; then
   ensure_cron "oh-my-hermes-product-review" "0 * * * *"     "Use failure-recovery for project ${PROJECT_SLUG:-default}: review active product work and actionable GitHub issues for $GITHUB_REPO. Keep one product outcome active and do not treat issue volume as the roadmap."
   ensure_cron "oh-my-hermes-security-daily" "30 8 * * *" \
     "Use failure-recovery for project ${PROJECT_SLUG:-default}: run security-review daily mode for $GITHUB_REPO: check tracked secret exposure and new Critical dependency advisories. Deduplicate known findings."
   ensure_cron "oh-my-hermes-security-weekly" "0 9 * * 1" \
     "Use failure-recovery for project ${PROJECT_SLUG:-default}: run security-review weekly mode for $GITHUB_REPO: full dependency, configuration, and supply-chain assessment."
->>>>>>> 9e3e68f (feat: add first-run server operating layer)
 else
-  warn "GITHUB_REPO not set — skipping scheduled security assessments"
+  warn "GITHUB_REPO not set — skipping product review and scheduled security assessments"
 fi
 
 # ── Summary ───────────────────────────────────────
