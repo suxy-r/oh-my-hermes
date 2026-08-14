@@ -47,15 +47,15 @@ When Hermes uses DeepSeek V4, route by task shape:
 
 | Work | Model and effort |
 |---|---|
-| Classification, routing, formatting, deterministic status | V4 Flash `low` |
+| Classification or routing that genuinely needs an LLM | V4 Flash `high` |
 | Bounded daily agent work and independent review | V4 Flash `high` |
 | Ambiguous implementation, architecture, long tool loop | V4 Pro `high` |
 | Rare high-risk conflict or irreversible synthesis | V4 Pro `max` |
 
-Use explicit `low`, `high`, or `max`. DeepSeek maps `medium` and `xhigh` to
-`high`, so they do not create useful intermediate levels. Pin dated provider
-model IDs after an A/B test instead of assuming an aggregator's generic alias
-has moved to the latest release.
+Prefer deterministic code over an LLM for pure status or formatting. For the
+current V4 API use explicit `high` or `max`: `low` and `medium` map to `high`,
+while `xhigh` maps to `max`. Use the provider's canonical model IDs and verify
+the resolved endpoint in a protocol A/B test instead of inventing dated aliases.
 
 Thinking tool loops must preserve the assistant's `reasoning_content` on every
 subsequent request. Streaming clients must tolerate empty chunks and aggregate

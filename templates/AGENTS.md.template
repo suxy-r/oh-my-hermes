@@ -62,9 +62,10 @@ Agents must follow these requirements for all changes:
 - Native/authenticated GUI work → computer-use only after API/browser paths
 - Not sure? Tell Hermes: "run choose-engine"
 
-For DeepSeek V4: use Flash low for routing/status, Flash high for bounded daily
-agent work, Pro high for ambiguous implementation, and Pro max only for rare
-high-risk conflict resolution. Use the minimum relevant toolset and preserve
+For DeepSeek V4: keep deterministic routing/status out of the model path, use
+Flash high for bounded daily agent work, Pro high for ambiguous implementation,
+and Pro max only for rare high-risk conflict resolution. V4 maps low/medium to
+high and xhigh to max. Use the minimum relevant toolset and preserve
 `reasoning_content` throughout thinking-mode tool loops.
 
 ## Monitoring
